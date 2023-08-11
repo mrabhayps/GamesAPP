@@ -1,0 +1,4341 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: gamesapp
+  description: GamesAPP Single Plateform Multiple game
+basePath: /api/v1
+tags:
+  - name: Examples
+    description: Simple example endpoints
+  - name: Specification
+    description: The swagger API specification
+  - name: otp
+    description: OTP End Point
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+definitions:
+  ExampleBody:
+    type: object
+    title: example
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: no_stress
+  SendOTP:
+    type: object
+    title: sendOTP
+    properties:
+      mobile:
+        type: string
+  SendSMSServerAlert:
+    type: object
+    title: sendSMS
+    required:
+      - mobile
+      - msg
+    properties:
+      mobile:
+        type: string
+      msg:
+        type: string
+  ContactSync:
+    type: object
+    title: Contact Sync
+    required:
+      - contactList
+    properties:
+      contactList:
+        type: string
+        example: '[{"name":"ABC","number":"9169155656","emailId":"abc@email.com","organization":"ABC Org","address":"Street 1"},{"name":"cde","number":"9125563356","emailId":"def@email.com","organization":"DEF Org","address":"Street 2"}]'
+  registerdevice:
+    type: object
+    title: Device Token details
+    properties:
+      token:
+        type: string
+      appType:
+        type: string
+      appVersion:
+        type: string
+  postlogs:
+    type: object
+    title: Post Logs
+    properties:
+      fkGameId:
+        type: integer
+      logMessage:
+        type: string
+      connectionType:
+        type: string
+      isInterrupted:
+        type: boolean
+      createdAt:
+        type: string
+  
+  usersourcelogs:
+    type: object
+    title: Source Logs
+    properties:
+      ipAddr:
+        type: string
+      utmSource:
+        type: string
+      utmSourceId:
+        type: string
+      utmMedium:
+        type: string
+      utmCampaign:
+        type: string
+      utmTerm:
+        type: string
+      utmContent:
+        type: string
+
+  resetObject:
+    type: object
+    title: Reset additional data
+    properties:
+      gdname:
+        type: string
+        enum: [HOME_PAGE_CARD, GAMES_APP_HISTORY, GAMES_DETAILS, GAME_PLAYER_COUNT, POPULAR_GAME, USER_DETAILS, ALL_DATA, CREATOR_STATUS_UPDATE_IP,HOME_PAGE_POPUP,GAME_LIST,BATTLE_LIST,BLOCKED_STATE]
+      state:
+        type: string
+      isPush:
+        type: boolean
+
+  ValidateOTP:
+    type: object
+    title: validateOTP
+    properties:
+      mobile:
+        type: string
+      otp:
+        type: string
+        required: false
+      friendId:
+        type: string
+        required: false
+      whatsAppId:
+        type: string
+        required: false
+  userReg:
+    type: object
+    title: User Registration
+    properties:
+      firstName:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      image:
+        type: string
+  userRestoreId:
+    type: object
+    title: User RestoreId
+    properties:
+      restoreId:
+        type: string
+  userKYC:
+    type: object
+    title: User KYC
+    properties:
+      response:
+        type: object
+      status:
+        type: number
+  userReport:
+    type: object
+    title: User Report
+    properties:
+      reportedUserId:
+        type: number
+      reportType:
+        type: string
+        enum: [CHEATER,USER_IMAGE, USER_NAME,OTHER]
+  userCreatorsDetails:
+    type: object
+    title: User Creators Details
+    properties:
+      name:
+        type: string
+      socialMediaLink:
+        type: string
+  userBlockUnblock:
+    type: object
+    title: User Blocking Unblocking
+    properties:
+      id:
+        type: integer
+        example: User id which you want to take action
+      status:
+        type: integer
+        example: "0: Parmanent Block, 1: Un-Block (Make Active), 2: Temporary Block"      
+  userBankDetails:
+    type: object
+    title: User Bank Details
+    properties:
+      nameInBank:
+        type: string
+      accountNumber:
+        type: string
+      bankName:
+        type: string
+      ifsc:
+        type: string
+      upiId:
+        type: string
+      state:
+        type: string
+  userPayTMMobile:
+    type: object
+    title: User PayTM Details
+    properties:
+      paytmMobile:
+        type: string
+  userLocation:
+    type: object
+    title: User Location
+    properties:
+      latitude:
+        type: string
+      longitude:
+        type: string
+  redeemreferral:
+    type: object
+    title: User Referral Code
+    properties:
+      referralCode:
+        type: string
+  userProfilePic:
+    type: object
+    title: User Profile Pic
+    properties:
+      profile:
+        type: string
+  userProfile:
+    type: object
+    title: User Profile
+    properties:
+      userName:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      image:
+        type: string
+      latitude:
+        type: string
+      longitude:
+        type: string
+      facebookId:
+        type: string
+      gender:
+        type: string
+      dob:
+        type: string
+  BattleRoom:
+    type: object
+    title: Battle Room
+    properties:
+      roomId:
+        type: string
+      gameId:
+        type: string
+      battleId:
+        type: string
+      gender:
+        type: string
+  favouriteGame:
+    type: object
+    title: Favourite Game
+    properties:
+      gameId:
+        type: number
+      isFavourite:
+        type: number
+  gameRequest:
+    type: object
+    title: Request for Game Playing
+    properties:
+      gameId:
+        type: number
+      battleId:
+        type: number
+      oppPlayerId:
+        type: number
+      isTournament:
+        type: string
+      gameEngine:
+        type: string
+      engineId:
+        type: string
+      roomId:
+        type: string
+      requestType:
+        type: string
+  rematch:
+    type: object
+    title: Rematch Request for Game Playing
+    properties:
+      gameId:
+        type: number
+      battleId:
+        type: number
+      oppPlayerId:
+        type: number
+      isTournament:
+        type: string
+      gameEngine:
+        type: string
+      engineId:
+        type: string
+      requestType:
+        type: string
+  acceptGameRequest:
+    type: object
+    title: Accepting rematch request
+    properties:
+      gameId:
+        type: number
+      battleId:
+        type: number
+      oppPlayerId:
+        type: number
+      isTournament:
+        type: string
+      gameEngine:
+        type: string
+      engineId:
+        type: string
+      battleRoomId:
+        type: string
+
+  transfersObjectForTransferMoneyRequest:
+    type: object
+    title: Transfer Money Request Internal Object
+    properties:
+      senderId:
+        type: string
+      receiverId:
+        type: string
+      amount:
+        type: string
+      event:
+        type: string
+
+  # transferMoneyRequest:
+  #   type: object
+  #   title: Transfer Money Request
+  #   properties:
+  #     gameId:
+  #       type: string
+  #     tableTypeId:
+  #       type: string
+  #     tableGameId:
+  #       type: string
+  #     transfers:
+  #       type: array
+  #       items:
+  #         $ref: '#/definitions/transfersObjectForTransferMoneyRequest'
+  #     message:
+  #       type: string
+  updateUserCoinWallet:
+    type: object
+    title: Update users coin wallet
+    properties:
+      amount:
+        type: string
+      tableGameId:
+        type: string
+      playerId:
+        type: string
+      event:
+        type: string
+      remarks:
+        type: string
+      deductRake:
+        type: boolean
+
+  tableGameEndTXN:
+    type: object
+    title: End TXN OBJ for table Game play.
+    properties:
+      gameTxnId:
+        type: string
+      playerId:
+        type: number
+      result:
+        type: string
+      amt:
+        type: number
+      deductRake:
+        type: boolean
+      restart:
+        type: boolean
+  tableGameRefund:
+    type: object
+    title: Refund TXN OBJ for stuck table Game play.
+    properties:
+      gameTxnId:
+        type: string
+      secretKey:
+        type: string
+
+  tableGameInitTXN:
+    type: object
+    title: Init TXN OBJ for table Game play.
+    properties:
+      playerId:
+        type: number
+      amt:
+        type: number
+      max:
+        type: boolean
+
+  joinTable:
+    type: object
+    title: Join a table Request
+    properties:
+      gameId:
+        type: string
+      tableTypeId:
+        type: string
+      playerId:
+        type: string
+      entryFee:
+        type: string
+  joinAndAdd:
+    type: object
+    title: Join and Add player to a table Request
+    properties:
+      gameId:
+        type: string
+      tableTypeId:
+        type: string
+      playerId:
+        type: string
+      entryFee:
+        type: string
+  
+  switchTable:
+    type: object
+    title: Switch table request
+    properties:
+      gameId:
+        type: string
+      tableTypeId:
+        type: string
+      playerId:
+        type: string
+      entryFee:
+        type: string
+      tableGameId:
+        type: string
+
+  autoRefillToggle:
+    type: object
+    title: Set auto refill
+    properties:
+      userId:
+        type: string
+      turn:
+        type: string
+  autoRefill:
+    type: object
+    title: Do auto refill
+    properties:
+      playerId:
+        type: string
+      tableGameId:
+        type: string
+  startGame:
+    type: object
+    title: Start table Game Request
+    properties:
+      tableGameId:
+        type: string
+  endGame:
+    type: object
+    title: End table Game Request
+    properties:
+      tableGameId:
+        type: string
+  addPlayer:
+    type: object
+    title: Add Player to the Game Request
+    properties:
+      tableGameId:
+        type: string
+      playerId:
+        type: string
+      entryFee:
+        type: string
+  leftPlayer:
+    type: object
+    title: Left Player from the Game Request
+    properties:
+      tableGameId:
+        type: string
+      playerId:
+        type: string
+  socketip:
+    type: object
+    title: Get Socket Addreess Request
+    properties:
+      tableGameId:
+        type: string
+        
+  tableGameLogRequest:
+    type: object
+    title: Table Game Log Request
+    properties:
+      gameId:
+        type: string
+      tableGameId:
+        type: string
+      event:
+        type: string
+      log:
+        type: string
+      source:
+        type: string
+  inviteToPlayGame:
+    type: object
+    title: Invite to play table game(Poker, Ludo, etc.)
+    properties:
+      gameId:
+        type: string
+      tableTypeId:
+        type: string
+      friendId:
+        type: string
+      gameEngine:
+        type: string
+      engineId:
+        type: string
+      tableGameId:
+        type: string
+      requestType:
+        type: string
+  failGame:
+    type: object
+    title: Fail the Game
+    properties:
+      tableGameId:
+        type: string
+      gameId:
+        type: string
+  failGames:
+    type: object
+    title: Fail the Game
+    properties:
+      tableGameId:
+        type: array
+        items:
+          type: number
+      gameId:
+        type: string
+  rejectGameRequest:
+    type: object
+    title: Reject rematch request
+    properties:
+      gameId:
+        type: number
+      oppPlayerId:
+        type: number
+      battleRoomId:
+        type: string
+  favouriteTournment:
+    type: object
+    title: Favourite Game
+    properties:
+      gameId:
+        type: string
+      turnamentId:
+        type: string
+  usercontestTeam:
+    type: object
+    title: teamPlayer
+    properties:
+      teamCode:
+        type: string
+      matchId:
+        type: string
+      contestId:
+        type: string
+      player:
+        type: array
+        items:
+          type: object
+          properties:
+            playerId:
+              type: string
+              required: true
+            designation:
+              type: string
+              required: true
+            isCaption:
+              type: integer
+              required: true
+            isViceCaption:
+              type: integer
+              required: true
+            teamId:
+              type: string
+              required: true
+  battleResult:
+    type: object
+    title: Battle Result
+    properties:
+      resultConclusive:
+        type: boolean
+        example: true
+        description: fallse-Error,true-Success
+      player1SessionId:
+        type: string
+      player2SessionId:
+        type: string
+      player1Score:
+        type: string
+      player2Score:
+        type: string
+      roomId:
+        type: string
+      note:
+        type: string
+
+  tournamentResult:
+    type: object
+    title: Tournament Result
+    properties:
+      isCompleted:
+        type: boolean
+        description: true-Game Completed, false-In-Playing
+      resultConclusive:
+        type: integer
+        description: 0-Success,1-Error
+      playerScore:
+        type: string
+      note:
+        type: string
+      roomId:
+        type: object
+
+  gServHealth:
+    type: object
+    title: Server Health
+    properties:
+      gType:
+        type: number
+      health:
+        type: boolean
+        description: true-good, false-bad
+      cpuLoad:
+        type: string
+      remarks:
+        type: string
+
+  paymentDeposit:
+    type: object
+    title: User Payment Deposit
+    properties:
+      payUResponse:
+        type: string
+
+  pgPaymentDeposit:
+    type: object
+    title: User Payment Deposit
+    properties:
+      pgResponse:
+        type: string
+      pgName:
+        type: string
+
+  depositairpaysuccess:
+    type: object
+    title: User Payment Deposit
+    
+
+  depositairpayfailure:
+    type: object
+    title: User Payment Deposit
+    properties:
+      failurePGResponse:
+        type: string
+
+  pgPaymentInit:
+    type: object
+    title: User Payment Init
+    properties:
+      amount:
+        type: string
+      pgName:
+        type: string
+
+  paytmTxnStatusWebhook:
+    type: object
+    title: Paytm Txn Status Webhook
+    properties:
+      CURRENCY:
+        type: string
+      GATEWAYNAME:
+        type: string
+      RESPMSG:
+        type: string
+      BANKNAME:
+        type: string
+      PAYMENTMODE:
+        type: string
+      CUSTID:
+        type: string
+      MID:
+        type: string
+      MERC_UNQ_REF:
+        type: string
+      RESPCODE:
+        type: string
+      TXNID:
+        type: string
+      TXNAMOUNT:
+        type: string
+      ORDERID:
+        type: string
+      STATUS:
+        type: string
+      BANKTXNID:
+        type: string
+      TXNDATETIME:
+        type: string
+      TXNDATE:
+        type: string
+
+  paymentWithdraw:
+    type: object
+    title: User Payment withdraw
+    properties:
+      amount:
+        type: number
+      tds:
+        type: number
+      logId:
+        type: number
+      status:
+        type: number
+
+  paymentWithdrawPayTm:
+    type: object
+    title: User Payment Withdraw PayTm
+    properties:
+      amount:
+        type: number
+
+  paymentWithdrawStatusPayTm:
+    type: object
+    title: paytm transaction status 
+    properties:
+        status:
+          type: string
+        statusCode:
+          type: string
+        statusMessage:
+          type: string
+        result:
+          type: object
+          properties:
+            mid:
+              type: string
+            orderId:
+              type: string
+            paytmOrderId:
+              type: string
+            amount:
+              type: string
+            commissionAmount:
+              type: string
+            tax:
+              type: string
+            rrn:
+              type: string
+            
+  purcheseToken:
+    type: object
+    title: Token Purchesing
+    properties:
+      token:
+        type: number
+
+  payTokenMatchup:
+    type: object
+    title: Game Id which you want to play
+    properties:
+      gameId:
+        type: number
+  userPaymentDetails:
+    type: object
+    title: User Payment Details
+    properties:
+      gameId:
+        type: number
+      userId:
+        type: number
+      gameEngine:
+        type: number
+      engineId:
+        type: number
+      amount:
+        type: number
+      userStreakLogId:
+        type: string
+  sendRequest:
+    type: object
+    title: Send Request
+    properties:
+      friendId:
+        type: number
+
+  acceptRequest:
+    type: object
+    title: Accept Request
+    properties:
+      friendId:
+        type: number
+
+  suggested:
+    type: object
+    title: Suggested Friends
+    properties:
+      syncType:
+        type: string
+        enum: [FB, CONTACTS]
+      friendId:
+        type: array
+        items:
+          type: string
+
+  scratchcard:
+    type: object
+    title: Scratch Card Data
+    properties:
+      gameType:
+        type: number
+        enum: [1, 2, 3, 4]
+      referenceId:
+        type: string
+
+  scratchedScratchcard:
+    type: object
+    title: Update Scratch Card Data
+    properties:
+      cardState:
+        type: number
+        enum: [3]
+      scratchCardId:
+        type: number
+
+  updateStreaks:
+    type: object
+    title: Update Streaks User Data
+    properties:
+      gameId:
+        type: number
+      taskName:
+        type: string
+      gameEngine:
+        type: number
+      engineId:
+        type: number
+
+  matchReminderBody:
+    type: object
+    title: reminder save for sending notification
+    properties:
+        matchId:
+          type: number
+         
+       
+
+paths:
+  /examples:
+    get:
+      tags:
+        - Examples
+      description: Fetch all examples
+      responses:
+        200:
+          description: Returns all examples
+    post:
+      tags:
+        - Examples
+      description: Create a new example
+      parameters:
+        - name: example
+          in: body
+          description: an example
+          required: true
+          schema:
+            $ref: "#/definitions/ExampleBody"
+      responses:
+        200:
+          description: Returns all examples
+
+  /examples/{id}:
+    get:
+      tags:
+        - Examples
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the example to retrieve
+          type: integer
+      responses:
+        200:
+          description: Return the example with the specified id
+        404:
+          description: Example not found
+  /spec:
+    get:
+      tags:
+        - Specification
+      responses:
+        200:
+          description: Return the API specification
+  /otp/sendotp:
+    post:
+      tags:
+        - otp
+      description: Send new OTP
+      parameters:
+        - name: otp
+          in: body
+          description: Example
+          required: true
+          schema:
+            $ref: "#/definitions/SendOTP"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Sends OTP to Mobile No
+  /otp/validateotp:
+    post:
+      tags:
+        - otp
+      description: Validate OTP
+      parameters:
+        - name: otp
+          in: body
+          description: Example
+          required: true
+          schema:
+            $ref: "#/definitions/ValidateOTP"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Validates OTPs
+
+  /user:
+    get:
+      tags:
+        - User
+      description: Logged in User details (Home Page)
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Logged in User details (Home Page)
+
+  /user/registration:
+    post:
+      tags:
+        - User
+      description: User Registration
+      parameters:
+        - name: User
+          in: body
+          description: User Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userReg"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Registration
+
+  /user/profile:
+    get:
+      tags:
+        - User
+      description: Logged in User Profile
+      parameters:
+        - name: isRelease
+          in: query
+          description: Check whether Release URL Or Debug URL
+          required: false
+          type: boolean
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Logged in User Profile
+    post:
+      tags:
+        - User
+      description: User Profile Update
+      parameters:
+        - name: User
+          in: body
+          description: User Profile
+          required: false
+          schema:
+            $ref: "#/definitions/userProfile"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Profile Update
+
+  /user/profile/{userId}:
+    get:
+      tags:
+        - User
+      description: User Profile
+      parameters:
+        - name: userId
+          in: path
+          description: User Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Profile
+
+  /user/userdetailsv2/{userId}:
+    get:
+      tags:
+        - User
+      description: User details V2
+      parameters:
+        - name: userId
+          in: path
+          description: User Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Details for game V2
+
+  /user/bankdetailsv2/{userId}:
+    get:
+      tags:
+        - User
+      description: Get User Bank Details
+      parameters:
+        - name: userId
+          in: path
+          description: User Id
+          required: true
+          type: integer
+          
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+     
+      responses:
+        200:
+          description: Get User Bank Details
+
+
+  /user/bankdetails:
+    post:
+      tags:
+        - User
+      description: User Bank Details
+      parameters:
+        - name: User
+          in: body
+          description: User Bank Details
+          required: true
+          schema:
+            $ref: "#/definitions/userBankDetails"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Bank Details
+
+    get:
+      tags:
+        - User
+      description: Get User Bank Details
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get User Bank Details
+
+    delete:
+      tags:
+        - User
+      description: Delete User Bank Details
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Delete user bank details
+
+
+  /user/paytmnumber:
+    post:
+      tags:
+        - User
+      description: User PayTM Number
+      parameters:
+        - name: PayTM Mobile
+          in: body
+          description: User PayTM Number
+          required: true
+          schema:
+            $ref: "#/definitions/userPayTMMobile"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User PayTM Mobile number details.
+
+    delete:
+      tags:
+        - User
+      description: Unlink User PayTM Number.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Unlink user PayTM Number
+          
+  /user/leaderboard:
+    get:
+      tags:
+        - User
+      description: User Leaderboard Game Home Page
+      parameters:
+        - name: type
+          in: query
+          description: this will check either today leaderboard or All time leader board 1-Today, 2-All Time
+          required: true
+          type: number
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User LeaderBoard Game Home Page
+
+  /user/blockUnblockUser:
+    post:
+      tags:
+        - User
+      description: User Block
+      parameters:
+        - name: User
+          in: body
+          description: User Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userBlockUnblock"  
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Blocking
+  
+  /user/usernames/list:
+    post:
+      tags:
+        - User
+      description: List usernames for supplied user ids
+      parameters:
+        - name: userIds
+          in: body
+          description: User Ids
+          required: true
+          schema:
+            type: object
+            required:
+              - userIds
+            properties:
+              userIds:
+                type: array
+                items:
+                  type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: List of usernames for supplied user ids
+
+  /user/location:
+    post:
+      tags:
+        - User
+      description: Update user location
+      parameters:
+        - name: User
+          in: body
+          description: User Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userLocation"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Update user location
+
+    get:
+      tags:
+        - User
+      description: User location
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User location
+
+  /user/redeemreferral:
+    post:
+      tags:
+        - User
+      description: Redeems the referral code refered by any GamesApp User
+      parameters:
+        - name: User
+          in: body
+          description: User Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/redeemreferral"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Redeems the referral code
+
+  /user/profilepic:
+    post:
+      tags:
+        - User
+      description: Update user Profile pic
+      parameters:
+        - name: User
+          in: body
+          description: User Body Example
+          required: false
+          schema:
+            $ref: "#/definitions/userProfilePic"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Update user Profile Pic
+  /user/referral/list:
+    get:
+      tags:
+        - User
+      description: User Referral List
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Referral List
+
+  /user/restoreid:
+    post:
+      tags:
+        - User
+      description: User Restore Id for fressChat
+      parameters:
+        - name: Restored
+          in: body
+          description: Restore Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userRestoreId"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Registratio
+
+  /user/kyc:
+    post:
+      tags:
+        - User
+      description: Save user KYC details.
+      parameters:
+        - name: KYC
+          in: body
+          description: KYC Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userKYC"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User KYC
+    get:
+      tags:
+        - User
+      description: Get user KYC details.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User KYC
+
+  /user/creatorsdetails:
+    post:
+      tags:
+        - User
+      description: User Apply as Creators 
+      parameters:
+        - name: CreatorsDetals
+          in: body
+          description: Restore Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userCreatorsDetails"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Accept as Creators
+          
+  /user/creatorsdashboard:
+    get:
+      tags:
+        - User
+      description:  Creators User dashboard
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Creators User dashboard
+  
+  /user/updatecreatorstatus:
+    get:
+      tags:
+        - User
+      description:  Creators User Status
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Creators User Status
+  /user/velidateuserkyc:
+    get:
+      tags:
+        - User
+      description:  User KYC
+      parameters:
+        - name: docType
+          in: query
+          description: Document Type
+          required: true
+          type: string
+        - name: docId
+          in: query
+          description: Document Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Creators User Status
+
+  /user/reportuser:
+    post:
+      tags:
+        - User
+      description: User reported by another users.
+      parameters:
+        - name: UserReported
+          in: body
+          description: Reported User Body Example
+          required: true
+          schema:
+            $ref: "#/definitions/userReport"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Reported 
+
+  /user/searchUser:
+    get:
+      tags:
+        - User
+      description: User global search.
+      parameters:
+        - name: userName
+          in: query
+          description: Search user string data
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page Number
+          required: false
+          type: number
+        - name: pageSize
+          in: query
+          description: pageSize
+          required: false
+          type: number
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Reported 
+
+  
+  /games/battle/allocateroom:
+    post:
+      tags:
+        - Games
+      description: Used to allocate battle room.
+      parameters:
+        - name: Battle Room
+          in: body
+          description: Example
+          required: true
+          schema:
+            $ref: "#/definitions/BattleRoom"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Battle Room
+
+  /games/battle/battledetails/{battleId}:
+    get:
+      tags:
+        - Games
+      description: Games Battle Details.
+      parameters:
+        - name: battleId
+          in: path
+          description: Battle Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Battle Details
+
+  /games/gamedetail/{gameId}:
+    get:
+      tags:
+        - Games
+      description: Games Details with battle and tournament listing.
+      parameters:
+        - name: gameId
+          in: path
+          description: Game Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Battle Details
+
+  /games/gamehistory:
+    get:
+      tags:
+        - Games
+      description: Games Battle Details.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Battle Details
+
+  /games/whoiswinning:
+    get:
+      tags:
+        - Games
+      description: Who is Winning.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Who is winning latest in app
+
+  /games/favourite:
+    post:
+      tags:
+        - Games
+      description: Favourite Game
+      parameters:
+        - name: Game Id
+          in: body
+          description: Example
+          required: true
+          schema:
+            $ref: "#/definitions/favouriteGame"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Favourite Game
+
+  /games/matchup:
+    get:
+      tags:
+        - Games
+      description: Matchup Home Page.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Matchup Game Home Page API
+
+  /games/home:
+    get:
+      tags:
+        - Games
+      description: Home Page.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Home Page API
+
+  /games/keepplaying:
+    get:
+      tags:
+        - Games
+      description: Home Page Keep Playing.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Home Page Keep Playing API
+
+  /games/recentlyplayed:
+    get:
+      tags:
+        - Games
+      description: Recently Played Games.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Recently Played Games API
+
+  /contactsync:
+    post:
+      tags:
+        - Common API
+      description: Syncing Contact
+      parameters:
+        - name: contact
+          in: body
+          description: Contact List
+          required: true
+          schema:
+            $ref: "#/definitions/ContactSync"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Sync Mobile Contact
+
+  /appConfig:
+    get:
+      tags:
+        - Common API
+      description: APP config API
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get APP Config API
+
+  /initialize:
+    get:
+      tags:
+        - Common API
+      description: Initiaize the app
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: false
+          type: string
+      responses:
+        200:
+          description: Initiaize the app(Flash Screen)
+
+  /alerts:
+    get:
+      tags:
+        - Common API
+      description: To get alert in app notification
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get app alert notefication
+
+  /serverstatus:
+    get:
+      tags:
+        - Common API
+      description: To know node server status
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To know the server status.
+
+  /serverHelthStatus:
+    get:
+      tags:
+        - Common API
+      description: To know node server health status
+      responses:
+        200:
+          description: To know the server status.
+
+
+  /serveralertsms:
+    post:
+      tags:
+        - Common API
+      description: Send SMS if server not working
+      parameters:
+        - name: sms
+          in: body
+          description: Example
+          required: true
+          schema:
+            $ref: "#/definitions/SendSMSServerAlert"
+      responses:
+        200:
+          description: Send SMS if server not working
+
+  /homebanner:
+    get:
+      tags:
+        - Common API
+      description: Home Banner List
+      parameters:
+        - name: type
+          in: query
+          description: Set the Type 1 - Game , 2 - Fantacy
+          required: true
+          type: integer
+
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get Home Banner List
+
+  /home:
+    get:
+      tags:
+        - Home API
+      description: Home page data
+      parameters:
+        - name: goopl
+          in: query
+          description: Set goopl true for playstore  false for website.
+          required: false
+          type: boolean
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get Home page data
+
+  /registerdevice:
+    post:
+      tags:
+        - Common API
+      description: Registering Device
+      parameters:
+        - name: devicetoken
+          in: body
+          description: Device Token Data
+          required: true
+          schema:
+            $ref: "#/definitions/registerdevice"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Device token registered
+
+  /deregisterdevice:
+    get:
+      tags:
+        - Common API
+      description: De register device
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Device token removed.
+  /sendnotification:
+    get:
+      tags:
+        - Common API
+      description: Send notification
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Notification Sent.
+  /postlogs:
+    post:
+      tags:
+        - Common API
+      description: Post disconnection Logs
+      parameters:
+        - name: logsData
+          in: body
+          description: Logs Data
+          required: true
+          schema:
+            $ref: "#/definitions/postlogs"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Post disconnection Logs
+  /usersource:
+    post:
+      tags:
+        - Common API
+      description: Post User source Logs
+      parameters:
+        - name: logsData
+          in: body
+          description: Logs Data
+          required: true
+          schema:
+            $ref: "#/definitions/usersourcelogs"
+      responses:
+        200:
+          description: Post User source Logs
+
+  /resetglobaldata:
+    post:
+      tags:
+        - Common API
+      description: Update global veriable data
+      parameters:
+        - name: data
+          in: body
+          description: Othere additional data
+          required: false
+          schema:
+            $ref: "#/definitions/resetObject"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: User Profile
+
+  /getkycapikey:
+    get:
+      tags:
+        - Common API
+      description: GET KYC API Key
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: KYC API Key.
+
+  /updateleaderbord:
+    get:
+      tags:
+        - Common API
+      description: Leaderboard update API
+      parameters:
+        - name: userId
+          in: query
+          description: userId
+          required: true
+          type: integer
+
+        - name: winAmt
+          in: query
+          description: Winning Amount
+          required: true
+          type: number
+          format: double
+      responses:
+        200:
+          description: Update user leaderbord from outside.
+
+  /sendpushnotification:
+    get:
+      tags:
+        - Common API
+      description: Send Push Notification for special purpose.
+      parameters:
+        - name: notificationType
+          in: query
+          description: Notification Type.
+          required: true
+          type: string
+          enum: ["APP_NEW_VERSION"]
+        - name: version
+          in: query
+          description: Notification Send for , ALL - AllUser OR Enter specific version .
+          required: fallse
+          type: string
+        - name: msg
+          in: query
+          description: Notification text .
+          required: fallse
+          type: string
+        - name: url
+          in: query
+          description: If new APP Then App URL.
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Notification sent..
+      
+
+  /uploadgameandapk:
+    post:
+      tags:
+        - File Upload
+      description: Upload File in clouds.
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: uploadType
+          in: query
+          description: File upload Type
+          required: true
+          type: string
+          enum: ["APK FILE","GAME FILE"]
+        - name: uploadTitle
+          in: query
+          description: File upload Title
+          required: true
+          type: string
+        - name: version
+          in: query
+          description: uploaded file version
+          required: true
+          type: string
+        - name: gameId
+          in: query
+          description: uploaded file version
+          required: false
+          type: string
+        - name: uploadFile
+          in: formData
+          description: File to upload
+          required: true
+          type: file
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Update user Profile Pic
+
+  /uploadapk:
+    post:
+      tags:
+        - File Upload
+      description: Upload APK File in clouds.
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: version
+          in: query
+          description: uploaded file version
+          required: true
+          type: string
+        - name: uploadFile
+          in: formData
+          description: File to upload
+          required: true
+          type: file
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Upload APK File
+
+  /updateuseragents:
+    post:
+      tags:
+        - Common API
+      description: Update useragents
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Save user agents.
+
+  /games/history:
+    get:
+      tags:
+        - Games
+      description: Game History.
+      parameters:
+        - name: gameId
+          in: query
+          description: Game id for history
+          required: true
+          type: string
+          example: "1001"
+        - name: historyType
+          in: query
+          description: Game history type either (1:battle) or (2:tornament or 0/undifined/null:Both)
+          required: false
+          type: integer
+          example: "1"
+        - name: searchParams
+          in: query
+          description: Search Parameters
+          required: false
+          type: object
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Home Page API
+
+  ############ Cricket Match Fantacy API ###############
+
+  /fantacy/cricket/home:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket Fantacy Home Page
+      parameters:
+        - name: tkey
+          in: query
+          description: Get match data based on the tab key
+          required: true
+          type: number
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Home API
+
+  /fantacy/cricket/contest:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket Fantacy Contest List
+      parameters:
+        - name: matchId
+          in: query
+          description: Match Id
+          required: true
+          type: string
+        - name: isMyContest
+          in: query
+          description: Used to get my contest tab data.
+          required: true
+          type: boolean
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest List API
+
+  /fantacy/cricket/contestinfo:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket Fantacy Contest Info
+      parameters:
+        - name: contestId
+          in: query
+          description: Contest Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Info API
+
+  /fantacy/cricket/matchplayersquad:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy player squad list
+      parameters:
+        - name: matchId
+          in: query
+          description: Match Id
+          required: true
+          type: string
+        - name: cid
+          in: query
+          description: Competition ID
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest List API
+
+  /fantacy/cricket/createusercontestteam:
+    post:
+      tags:
+        - Cricket Fantacy
+      description: Contest Team Creation
+      parameters:
+        - name: Team
+          in: body
+          description: Team Created By User
+          required: true
+          schema:
+            $ref: "#/definitions/usercontestTeam"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Sync Mobile Contact
+
+  /fantacy/cricket/matchstats:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy player match stats
+      parameters:
+        - name: matchId
+          in: query
+          description: Match Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Match Stats
+
+  /fantacy/cricket/userteamlist:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy user team list
+      parameters:
+        - name: matchId
+          in: query
+          description: Match Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy User Team List
+
+  /fantacy/cricket/userteampreview:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy user team preview
+      parameters:
+        - name: teamCode
+          in: query
+          description: Team Code
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy User Team Preview
+
+  /fantacy/cricket/playerhistoryandpoint:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy Player History and Point
+      parameters:
+        - name: playerId
+          in: query
+          description: Player Id which you want to get point breakup or its history.
+          required: true
+          type: integer
+        - name: isPoint
+          in: query
+          description: To get point breakup other wise player history.
+          required: true
+          type: boolean
+        - name: matchId
+          in: query
+          description: To get point breakup and history of player in match.
+          required: true
+          type: string
+        - name: teamCode
+          in: query
+          description: To get point breakup of player in User Team.
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy User Team Preview
+
+  /fantacy/cricket/contestteamstats:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy Contest Stats
+      parameters:
+        - name: ContestId
+          in: query
+          description: Contest Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Team Stats
+
+  /fantacy/cricket/joincontest:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: Cricket fantacy Join Contast
+      parameters:
+        - name: contestId
+          in: query
+          description: Contest Id
+          required: true
+          type: string
+        - name: teamCode
+          in: query
+          description: Team Code
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Team Stats
+
+  /fantacy/cricket/usercontestteampoint:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: User contest team fantacy point
+      parameters:
+        - name: contestId
+          in: query
+          description: Contest Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Team Stats
+
+  /fantacy/cricket/usercontestteamleaderboard:
+    get:
+      tags:
+        - Cricket Fantacy
+      description: User contest team leader board
+      parameters:
+        - name: contestId
+          in: query
+          description: Contest Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Team Leader Board
+   
+
+   
+  /fantacy/cricket/matchReminder:
+     post:
+        tags:
+         - Cricket Fantacy
+        description: Player reminder creation
+        parameters:
+          - name: createReminderData
+            in: body
+            description: Reminder Data
+            required: true
+            schema: 
+              $ref: "#/definitions/matchReminderBody"
+          - name: x-auth-key
+            in: header
+            description: an authorization header
+            required: true
+            type: string
+        responses:
+          200:
+            description: Reminder notification create for player 
+
+  ########## End Of Cricket Fantacy Documentation #############
+  ############## Games Two Way Security API ##################
+
+  /games/integration/CreateGameRoomRequest:
+    get:
+      tags:
+        - Two Way Game Secure API
+      description: Player Game Room or Tournemant Position Creation
+      parameters:
+        - name: isTournament
+          in: query
+          description: Game Type 1-Tournament, 0-Battle
+          required: true
+          type: string
+        - name: battleId
+          in: query
+          description: Battle Id in case of battle
+          required: false
+          type: string
+        - name: tournamentId
+          in: query
+          description: Tournament Id in case of tournament
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Team Leader Board
+
+  /games/integration/CreateGameRoomRequestV2:
+    get:
+      tags:
+        - Two Way Game Secure API
+      description: Combined API for amount deduction and create game room request.
+      parameters:
+        - name: isTournament
+          in: query
+          description: Game Type 1-Tournament, 0-Battle
+          required: true
+          type: string
+        - name: battleId
+          in: query
+          description: Battle Id in case of battle
+          required: false
+          type: string
+        - name: tournamentId
+          in: query
+          description: Tournament Id in case of tournament
+          required: false
+          type: string
+        - name: gameId
+          in: query
+          description: Game Id for which amount needs to be deducted
+          required: true
+          type: string
+        - name: gameEngine
+          in: query
+          description: Game Engine 1, 2 or 3
+          required: true
+          type: string
+        - name: engineId
+          in: query
+          description: engineId
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: If payment failed then 500/502 statusCode else, CreateGameRoomRequest standard response.
+
+  /games/integration/updateBattleGameResultRequest:
+    post:
+      tags:
+        - Two Way Game Secure API
+      description: Update Battle Game Result Request API
+      parameters:
+        - name: battleResult
+          in: body
+          description: Team Created By User
+          required: true
+          schema:
+            $ref: "#/definitions/battleResult"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Update Battle Room Player Score
+
+  /games/integration/updateTournamentGameResultRequest:
+    post:
+      tags:
+        - Two Way Game Secure API
+      description: Update Tournament Game Result Request API
+      parameters:
+        - name: tournamentResult
+          in: body
+          description: Tournament Result Updated by User
+          required: true
+          schema:
+            $ref: "#/definitions/tournamentResult"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Update Tournament Player Score
+
+  /games/integration/fetchGameResultRequest:
+    get:
+      tags:
+        - Two Way Game Secure API
+      description: Player Game Room or Tournemant Result
+      parameters:
+        - name: gameRoomSession
+          in: header
+          description: Session Data Inside it room id and player id etc. Exists
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cricket Fantacy Contest Team Leader Board
+
+  /games/integration/gServHealthCheck:
+    post:
+      tags:
+        - Two Way Game Secure API
+      description: Game Server health update by It self to Main APP .
+      parameters:
+        - name: serverHealth
+          in: body
+          description: Health of Game server .
+          required: true
+          schema:
+            $ref: "#/definitions/gServHealth"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Update Game server health .
+  /games/integration/playgame:
+    post:
+      tags:
+        - Playing Game
+      description: Create Game request to friend to play API
+      parameters:
+        - name: gameRequest
+          in: body
+          description: Game requested By User
+          required: true
+          schema:
+            $ref: "#/definitions/gameRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Create Game request to friend to play API
+
+  /games/integration/rematch:
+    post:
+      tags:
+        - Rematch API
+      description: Rematch API
+      parameters:
+        - name: rematch
+          in: body
+          description: Rematch
+          required: true
+          schema:
+            $ref: "#/definitions/rematch"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: If payment failed then 500/502 statusCode else, CreateGameRoomRequest standard response.
+
+  /games/integration/acceptRequest:
+    post:
+      tags:
+        - Accept rematch request
+      description: Accept rematch request API
+      parameters:
+        - name: acceptRequest
+          in: body
+          description: Accept rematch request
+          required: true
+          schema:
+            $ref: "#/definitions/acceptGameRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: If payment failed then 500/502 statusCode else, CreateGameRoomRequest standard response.
+
+  /games/integration/rejectRequest:
+    post:
+      tags:
+        - Reject rematch request
+      description: Reject rematch request API
+      parameters:
+        - name: rejecttRequest
+          in: body
+          description: Reject rematch request
+          required: true
+          schema:
+            $ref: "#/definitions/rejectGameRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Reject message in response.
+
+  ##########         End Of Two way secure Integration           #############
+  ##########    Starting Payment Documentation    #############
+
+  ###########  Table format games APIs ##############
+
+  /games/table/autorefill/toggle:
+    post:
+      tags:
+        - Table Format Games
+      description: Set auto refill setting for a user
+      parameters:
+        - name: Set auto refill
+          in: body
+          description: set auto refill
+          required: true
+          schema:
+            $ref: "#/definitions/autoRefillToggle"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Toggle Auto refill response
+
+  /games/table/autorefill:
+    post:
+      tags:
+        - Table Format Games
+      description: Do auto refill for a user
+      parameters:
+        - name: Do auto refill
+          in: body
+          description: Do auto refill
+          required: true
+          schema:
+            $ref: "#/definitions/autoRefill"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Auto refill response
+
+  /games/table/autorefill/{userId}:
+    get:
+      tags:
+        - Table Format Games
+      description: Get auto refill status for a user
+      parameters:
+
+        - in: path
+          name: userId # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user ID
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Auto refill response
+
+  /games/table/join:
+    post:
+      tags:
+        - Table Format Games
+      description: Join a table
+      parameters:
+        - name: Join a table
+          in: body
+          description: Join a table
+          required: true
+          schema:
+            $ref: "#/definitions/joinTable"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Join a table response
+  /games/table/joinAndAdd:
+    post:
+      tags:
+        - Table Format Games
+      description: Join and Add player to a table
+      parameters:
+        - name: Join and Add player to a table
+          in: body
+          description: Join and Add player to a table
+          required: true
+          schema:
+            $ref: "#/definitions/joinAndAdd"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Join and Add Player to a table response
+  
+  /games/table/switch:
+    post:
+      tags:
+        - Table Format Games
+      description: Switch to another table
+      parameters:
+        - name: Switch to another table
+          in: body
+          description: Switch to another table
+          required: true
+          schema:
+            $ref: "#/definitions/switchTable"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Switch to another table response
+
+  /games/table/start:
+    post:
+      tags:
+        - Table Format Games
+      description: Start a Game
+      parameters:
+        - name: Start a game
+          in: body
+          description: Start a game
+          required: true
+          schema:
+            $ref: "#/definitions/startGame"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Start Game response
+  /games/table/startGame:
+    post:
+      tags:
+        - Table Format Games
+      description: Start a Game
+      parameters:
+        - name: Start a game
+          in: body
+          description: Start a game
+          required: true
+          schema:
+            $ref: "#/definitions/startGame"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Start Game response
+  /games/table/endGame:
+    post:
+      tags:
+        - Table Format Games
+      description: End a Game
+      parameters:
+        - name: End a game
+          in: body
+          description: End a game
+          required: true
+          schema:
+            $ref: "#/definitions/endGame"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: End Game response
+  /games/table/addPlayer:
+    post:
+      tags:
+        - Table Format Games
+      description: Add player to the Game
+      parameters:
+        - name: Add player to the Game
+          in: body
+          description: Add player to the Game
+          required: true
+          schema:
+            $ref: "#/definitions/addPlayer"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Add Player to game response
+  /games/table/leftPlayer:
+    post:
+      tags:
+        - Table Format Games
+      description: Left player from the Game
+      parameters:
+        - name: Left player from the Game
+          in: body
+          description: Left player from the Game
+          required: true
+          schema:
+            $ref: "#/definitions/addPlayer"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Left player from the Game response
+
+  /games/table/log:
+    post:
+      tags:
+        - Table Format Games
+      description: Table game logs
+      parameters:
+        - name: Table game log request
+          in: body
+          description: Table game log request
+          required: true
+          schema:
+            $ref: "#/definitions/tableGameLogRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Table game log response
+
+  /games/table/invite:
+    post:
+      tags:
+        - Table Format Games
+      description: Invite/Accept/Rejecr friend to play Table Format Games
+      parameters:
+        - name: invite a friend
+          in: body
+          description: invite a friend
+          required: true
+          schema:
+            $ref: "#/definitions/inviteToPlayGame"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: returns table game response
+    
+  /games/table/fail:
+    post:
+      tags:
+        - Table Format Games
+      description: Fail a Game
+      parameters:
+        - name: Fail a game
+          in: body
+          description: Fail a game
+          required: true
+          schema:
+            $ref: "#/definitions/failGame"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Fail Game response
+
+  /games/table/failgames:
+    post:
+      tags:
+        - Table Format Games
+      description: Fail Multiple Games
+      parameters:
+        - name: Fail Multiple game
+          in: body
+          description: Fail Multiple game
+          required: true
+          schema:
+            $ref: "#/definitions/failGames"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Fail Game response
+  /games/table/stats:
+    get:
+      tags:
+        - Table Games Stats
+      description: To get Table Games Stats
+      parameters:
+        - name: gameId
+          in: query
+          description: Game Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get Table Games Stats
+  # /games/table/transferMoney:
+  #   post:
+  #     tags:
+  #       - Table Format Games
+  #     description: Transfer money between users
+  #     parameters:
+  #       - name: transfermoneyrequest
+  #         in: body
+  #         description: Transfer money request
+  #         required: true
+  #         schema:
+  #           $ref: '#/definitions/transferMoneyRequest'
+  #       - name: x-auth-key
+  #         in: header
+  #         description: an authorization header
+  #         required: true
+  #         type: string
+  #     responses:
+  #       200:
+  #         description: Transfered money response
+  /games/table/user/coinwallet:
+    post:
+      tags:
+        - Table Format Games
+      description: Update user coin wallet balance reques
+      parameters:
+        - name: updateUserCoinWallet
+          in: body
+          description: Update user coin wallet balance request body
+          required: true
+          schema:
+            $ref: "#/definitions/updateUserCoinWallet"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Updated user coin wallet balance
+  
+  /games/table/user/coinwalletdirect:
+    post:
+      tags:
+        - Table Format Games
+      description: Update user coin wallet balance reques
+      parameters:
+        - name: updateUserCoinWallet
+          in: body
+          description: Update user coin wallet balance request body
+          required: true
+          schema:
+            $ref: "#/definitions/updateUserCoinWallet"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Updated user coin wallet balance
+
+  /games/table/user/coinwalletdirectone:
+    post:
+      tags:
+        - Table Format Games
+      description: Update user coin wallet balance reques
+      parameters:
+        - name: updateUserCoinWallet
+          in: body
+          description: Update user coin wallet balance request body
+          required: true
+          schema:
+            $ref: "#/definitions/updateUserCoinWallet"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Updated user coin wallet balance
+
+  /games/table/list:
+    get:
+      tags:
+        - Table Format Games
+      description: To Get Table Type List
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Table Type List Response
+
+  /games/table/playerBalance/{userId}/{tableGameId}:
+    get:
+      tags:
+        - Table Format Games
+      description: To Get Player Balance
+      parameters:
+        - in: path
+          name: userId # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user ID
+        - in: path
+          name: tableGameId # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The table game id
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Player Balance Response
+  /games/table/socketip:
+    post:
+      tags:
+        - Table Format Games
+      description: Socket IP Address for the table 
+      parameters:
+        - name: Socket IP Address for the table 
+          in: body
+          description: Socket IP Address for the table 
+          required: true
+          schema:
+            $ref: "#/definitions/socketip"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Socket IP Address for the table Response
+  
+  /games/table/initTxn:
+    post:
+      tags:
+        - Table Format Games
+      description: This API use to initilize the txn for Table Game Play where we deduct the amount from user GamesAPP wallet.
+      parameters:
+        - name: txnData
+          in: body
+          description: Init Txn Data.
+          required: true
+          schema:
+            $ref: "#/definitions/tableGameInitTXN"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Initilize Table Gameplay Txn.
+
+  /games/table/endTxn:
+    post:
+      tags:
+        - Table Format Games
+      description: This API use to distribute and deduct the win and loose amount from user gamesAPP wallet.
+      parameters:
+        - name: txnData
+          in: body
+          description: Init Txn Data.
+          required: true
+          schema:
+            $ref: "#/definitions/tableGameEndTXN"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: End Table Gameplay Txn.
+
+  /games/table/ingame:
+    get:
+      tags:
+        - Table Format Games
+      description: This api check whether player is in game or not
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Check player in game status.
+
+  /games/table/refundTxn:
+    post:
+      tags:
+        - Table Format Games
+      description: This API use to refund user amount if any user get stuck in init Txn.
+      parameters:
+        - name: txnData
+          in: body
+          description: Init Txn Data.
+          required: true
+          schema:
+            $ref: "#/definitions/tableGameRefund"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Refund Table Gameplay Txn.
+
+  /games/table/getStuckTrxnList:
+    get:
+      tags:
+        - Table Format Games
+      description: get all Stuck Txn for Table Format game
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: get all stuck txn details TFG
+  ##################################################
+
+  /payment/deposit:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/paymentDeposit"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+
+  /payment/depositPhonePe:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment PhonePe
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/paymentDeposit"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+
+  /payment/phonepewebhook:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment PhonePe Webhook.
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/paymentDeposit"
+        - name: x-verify
+          in: header
+          description: PhonePe checksum.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit by phone pe S2S.
+  /payment/phonepestatus:
+    post:
+      tags:
+        - Payment
+      description: PhonePe check payment status API.
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/paymentDeposit"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: PhonePe user payment checkStatus API.
+
+  /payment/depositSabPaisa:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment SabPaisa 
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/paymentDeposit"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+
+
+  /payment/depositV2:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/pgPaymentDeposit"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+
+  /payment/depositairpaysuccess:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment with air pay
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+  
+  /payment/depositairpayfailure:
+    post:
+      tags:
+        - Payment
+      description: Deposit User Payment with air pay
+      parameters:
+        - name: paymentDetails
+          in: body
+          description: Deposit User Payment Details
+          required: true
+          schema:
+            $ref: "#/definitions/depositairpayfailure"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+  
+
+  /payment/cashback:
+    get:
+      tags:
+        - Payment
+      description: Cashback for user deposit
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Cashback for user deposit
+
+  /payment/initiate:
+    post:
+      tags:
+        - Payment
+      description: Initiate User Payment
+      parameters:
+        - name: paymentInit
+          in: body
+          description: Init User Payment
+          required: true
+          schema:
+            $ref: "#/definitions/pgPaymentInit"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Initiate user payment deposit
+
+  /payment/paytm-txn-status:
+    post:
+      tags:
+        - Payment
+      description: Webhook to get txn status from paytm
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: body
+          description: Paytm Webhook for transaction status.
+          schema:
+            $ref: "#/definitions/paytmTxnStatusWebhook"
+      responses:
+        200:
+          description: Webhook to get txn status from paytm
+
+  /payment/getDepositBalance:
+    get:
+      tags:
+        - Payment
+      description: To Get Deposit Balance Of User
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get Deposit Balance Of User
+
+  /payment/getWithdrawBalance:
+    get:
+      tags:
+        - Payment
+      description: To Get Withdraw Balance Of User
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get Withdraw Balance Of User
+
+  /payment/getUserAccountBalance:
+    get:
+      tags:
+        - Payment
+      description: To Get Total Balance Of User
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get User Account Balance Of User
+
+  /payment/gameplay:
+    get:
+      tags:
+        - Payment
+      description: To Get Deduct Amount from User Account before Game Play
+      parameters:
+        - name: gameId
+          in: query
+          description: Game Which User Want To Play, if cricket fantacy then matchId
+          required: true
+          type: string
+        - name: gameEngine
+          in: query
+          description: 1-If Battle, 2-If Tournament, 3-Cricket Fantacy
+          required: true
+          type: string
+        - name: engineId
+          in: query
+          description: Tournament Id-If Tournament, Battle Id-If Battle, contestId-if Cricket fantacy
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get Withdraw Balance Of User
+
+  /payment/tournamentPrizeDistribution:
+    post:
+      tags:
+        - Payment
+      description: Distribute Winners Prize To Account
+      parameters:
+        - name: tournamentId
+          in: header
+          description: Tournament Id
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user payment deposit
+
+  /payment/withdraw:
+    post:
+      tags:
+        - Payment
+      description: Withdraw amount from user wallet to bank account
+      parameters:
+        - name: amount
+          in: body
+          description: Amount to be withdraw
+          required: true
+          schema:
+            $ref: "#/definitions/paymentWithdraw"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: secret_key
+          in: header
+          description: the API secret Key
+          required: false
+          type: string
+      responses:
+        200:
+          description: Make user withdraw from wallet to bank account
+
+  /payment/withdrawPayTm:
+    post:
+      tags:
+        - Payment
+      description: Withdraw amount from user wallet to PayTm Account.
+      parameters:
+        - name: Withdraw Parameter
+          in: body
+          description: Amount to be withdraw
+          required: true
+          schema:
+            $ref: "#/definitions/paymentWithdrawPayTm"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Make user withdraw from wallet to PayTm Account.
+
+  /payment/withdraw-txn-status-paytm:
+    post:
+      tags:
+        - Payment
+      description: Withdraw transaction status from PayTM.
+      parameters:
+        - name: Status Parameter
+          in: body
+          description: Final Status of Transaction.
+          required: true
+          schema:
+            $ref: "#/definitions/paymentWithdrawStatusPayTm"
+      responses:
+        200:
+          description: PayTM Call this service once the transaction status will get in there final states.
+
+  /payment/paytokenmatchup:
+    post:
+      tags:
+        - Payment
+      description: To Get Deduct Token from User Account before Matchup Game starts
+      parameters:
+        - name: gameId
+          in: body
+          description: Game Id which you want to play
+          required: true
+          type: string
+          schema:
+            $ref: "#/definitions/payTokenMatchup"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get Withdraw Balance Of User
+
+  /payment/purchesetoken:
+    post:
+      tags:
+        - Payment
+      description: To purchase Token from Deposite Account Balance
+      parameters:
+        - name: token
+          in: body
+          description: Number of token you want to purchese
+          required: true
+          type: string
+          schema:
+            $ref: "#/definitions/purcheseToken"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get Withdraw Balance Of User
+
+  /payment/transactionHistory:
+    get:
+      tags:
+        - Payment
+      description: To Get Transaction History of User
+      parameters:
+        - name: type
+          in: query
+          description: 1-Withdraw and Deposit, 2-Token
+          required: true
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To Get User Account Balance Of User
+
+  /payment/transactionHistoryV2:
+    get:
+      tags:
+        - Payment
+      description: To Get Transaction History of User Paginated, grouped by battle room id
+      parameters:
+        - name: type
+          in: query
+          description: 1-Withdraw and Deposit, 2-Token
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: page number
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get transaction history of user.
+    
+  /payment/transactionHistoryV3:
+    get:
+      tags:
+        - Payment
+      description: To Get Transaction History of User Paginated, grouped by battle room id
+      parameters:
+        - name: type
+          in: query
+          description: 1-Withdraw and Deposit, 2-Token
+          required: true
+          type: string
+        - name: latest
+          in: query
+          description: For lastest 48 Hr data default if false than it will send back to 48 hr data
+          required: true
+          type: boolean
+        - name: page
+          in: query
+          description: page number
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get transaction history of user.
+
+  /payment/transactiondetails:
+    get:
+      tags:
+        - Payment
+      description: To get specific transaction details.
+      parameters:
+        - name: id
+          in: query
+          description: Trancaction log id.
+          required: true
+          type: number
+        - name: type
+          in: query
+          description: 1-Withdraw, 2-Deposit, 3-Token, 4-Bonus
+          required: true
+          type: number
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get specific transaction details
+
+  /payment/creditAmountToUser:
+    post:
+      tags:
+        - Payment
+      description: Credit Amountto User account
+      parameters:
+        - name: paymentdetails
+          in: body
+          description: To update user streak data
+          required: true
+          schema:
+            $ref: "#/definitions/userPaymentDetails"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Get Success message 
+
+  /payment/allPendingForApprovalWithdrawTxn:
+    get:
+      tags:
+        - Payment
+      description: get all Txn for admin api
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: get all txn details 
+  /payment/successStuckDepositTxn:
+    get:
+      tags:
+        - Payment
+      description: Make it Success if txn was stuck in Pending or Failed and then Success.
+      parameters:
+        - name: txnId
+          in: query
+          description: Deposit Txn Id
+          required: true
+          type: string
+          example: "4af42944-6533-4c97-a07b-cb3d96f38560"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Pending& Failed Txn to Success by Cron Job Status enquiry Check 
+  
+  /payment/getDepositTrnxList:
+    get:
+      tags:
+        - Payment
+      description: get all Deposit txn of last hour or all pending transaction.
+      parameters:
+        - name: isAllPendingDepositTxn
+          in: query
+          description: all pending txn(true) or last hour txn(false)
+          required: true
+          type: boolean
+        - name:  page
+          in: query
+          description: page number
+          required: false  
+          type: number 
+        - name: page_size
+          in: query
+          description: page size number
+          required: false  
+          type: number  
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: all deposit txn listed sucessfully   
+
+
+##########    End of Payment Documentation    #############
+  /friends/sendrequest:
+    post:
+      tags:
+        - Friends
+      description: To send friend request
+      parameters:
+        - name: friendId
+          in: body
+          description: Friend's id
+          required: true
+          type: number
+          schema:
+            $ref: "#/definitions/sendRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To send friend request
+
+  /friends/acceptrequest:
+    post:
+      tags:
+        - Friends
+      description: To accept friend request
+      parameters:
+        - name: friendId
+          in: body
+          description: Friend's id
+          required: true
+          type: number
+          schema:
+            $ref: "#/definitions/acceptRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To accept friend request
+
+  /friends/unfriend:
+    post:
+      tags:
+        - Friends
+      description: To unfriend users
+      parameters:
+        - name: friendId
+          in: body
+          description: Friend's id
+          required: true
+          type: number
+          schema:
+            $ref: "#/definitions/acceptRequest"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To unfriend users
+
+  /friends/friendslist:
+    get:
+      tags:
+        - Friends
+      description: To get friends list
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: page number
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          type: string
+      responses:
+        200:
+          description: To get friends list
+
+  /friends/requestslist:
+    get:
+      tags:
+        - Friends
+      description: To get friend requests list
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get friend requests list
+
+  /friends/recentlyplayed:
+    get:
+      tags:
+        - Friends
+      description: To get recently played users list
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: page number
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          type: string
+      responses:
+        200:
+          description: To get recently played users list
+
+  /friends/suggested:
+    post:
+      tags:
+        - Friends
+      description: To get suggested friends list
+      parameters:
+        - name: friendsList
+          in: body
+          description: Facebook Friends(Facebook id) list or Contact(Phone number) list
+          required: true
+          schema:
+            $ref: "#/definitions/suggested"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get suggested friends list
+
+  /agora/generate/token:
+    get:
+      tags:
+        - Agora generate token
+      description: Agora generate Token
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: channel
+          in: query
+          description: Channel Name
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get agora generate token
+
+    ##########    Start of Tournament Documentation    ##################
+
+  /games/tournament/list/{gameId}:
+    get:
+      tags:
+        - Game-Tournament
+      description: Tournament List of specific game.
+      parameters:
+        - name: gameId
+          in: path
+          description: Game Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Game Tournament List
+
+  /games/tournament/deatils/{tournamentId}:
+    get:
+      tags:
+        - Game-Tournament
+      description: Tournament Details.
+      parameters:
+        - name: tournamentId
+          in: path
+          description: Tournament Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Tournament Details
+
+  /games/tournament/history/{gameId}:
+    get:
+      tags:
+        - Game-Tournament
+      description: Tournament History.
+      parameters:
+        - name: gameId
+          in: path
+          description: Game Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Tournament History
+
+  /games/tournament/playnow/{tournamentId}:
+    get:
+      tags:
+        - Game-Tournament
+      description: Tournament History.
+      parameters:
+        - name: tournamentId
+          in: path
+          description: Tournament Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Play Tournament
+
+  /games/tournament/updatescore:
+    post:
+      tags:
+        - Game-Tournament
+      description: Tournament Result.
+      parameters:
+        - name: tournamentResult
+          in: body
+          description: Player Score
+          required: true
+          schema:
+            $ref: "#/definitions/tournamentResult"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Tournament Result
+
+  ##########    End of Tournament Documentation    ##################
+
+  ##########    Start of Scratch Card Documentation ##################
+
+  /scratchcard:
+    post:
+      tags:
+        - Scratch Card
+      description: Create scratch card
+      parameters:
+        - name: scratchcard
+          in: body
+          description: To create scratch card
+          required: true
+          schema:
+            $ref: "#/definitions/scratchcard"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Create scratch card
+  /scratchcard/scratched:
+    post:
+      tags:
+        - Scratch Card
+      description: Scratched scratch card
+      parameters:
+        - name: scratchedScratchcard
+          in: body
+          description: To scratched scratch card
+          required: true
+          schema:
+            $ref: "#/definitions/scratchedScratchcard"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Scratched scratch card
+
+  /scratchcard/referalTcket:
+    get:
+      tags:
+        - Scratch Card
+      description: Get all ticket which is used to onboard by referral code.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Referral Ticket list.
+
+  /scratchcard/redeemstodeposit:
+    get:
+      tags:
+        - Scratch Card
+      description: Redeems to deposit the unlock amount of scratch card.
+      parameters:
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Redeems to deposite the unlock amount.
+
+  /scratchcard/details/{scratchCardId}:
+    get:
+      tags:
+        - Scratch Card
+      description: Get Scratch card details
+      parameters:
+        - name: scratchCardId
+          in: path
+          description: Scratch Card Id
+          required: true
+          type: integer
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Scratch card details
+
+  /scratchcard/list:
+    get:
+      tags:
+        - Scratch Card
+      description: To get Scratch Cards list
+      parameters:
+        - name: page
+          in: query
+          description: page number
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get Scratch Cards list
+##########    End of Scratch Card Documentation ##################
+##########    Start of Streaks Documentation ##################
+  /streaks:
+    post:
+      tags:
+        - Streaks
+      description: Updating user streaks
+      parameters:
+        - name: updateStreaks
+          in: body
+          description: To update user streak data
+          required: true
+          schema:
+            $ref: "#/definitions/updateStreaks"
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully updated message
+  /streaks/list:
+    get:
+      tags:
+        - Streaks List
+      description: To get Streaks List
+      parameters:
+        - name: page
+          in: query
+          description: page number
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          type: string
+        - name: x-auth-key
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: To get Streaks list
+##########    End of Streaks Documentation ##################
+##########    Start of Prelogn API Documentation ##################
+  /prelogin/leaderboard:
+    get:
+      tags:
+        - Prelogin API
+      description: Get global Leaderbord data
+      responses:
+        200:
+          description: Leaderbord
+##########    End of Prelogn API Documentation ##################
